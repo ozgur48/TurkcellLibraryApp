@@ -33,6 +33,9 @@ public class LoanBusinessRules {
             throw new BusinessException("Borcu olduğu için ödünç alamaz!!!");
         }
     }
+    public Loan loanMustExistWithGivenId(int id){
+        return loanRepository.findById(id).orElseThrow(() -> new BusinessException("loan with id " + id + "not found"));
+    }
 
     public void checkDuplicateLoan(int memberId, String isbn){
         Loan existingLoan = loanRepository.findByMemberIdAndBookIsbnAndReturnDateIsNull(memberId, isbn).orElse(null);
