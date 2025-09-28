@@ -1,7 +1,10 @@
 package com.libraryapp.librarymanagementapp.service;
 
+import com.libraryapp.librarymanagementapp.core.exception.type.BusinessException;
 import com.libraryapp.librarymanagementapp.core.jwt.JwtUtil;
+import com.libraryapp.librarymanagementapp.dto.user.request.LoginRequest;
 import com.libraryapp.librarymanagementapp.dto.user.request.RegisterRequest;
+import com.libraryapp.librarymanagementapp.dto.user.response.LoginResponse;
 import com.libraryapp.librarymanagementapp.dto.user.response.RegisteredResponse;
 import com.libraryapp.librarymanagementapp.entity.User;
 import com.libraryapp.librarymanagementapp.mapper.UserMapper;
@@ -28,7 +31,6 @@ public class AuthService {
 
     public RegisteredResponse register(RegisterRequest registerRequest){
 
-
         userBusinessRules.userNameMustNotExistWithSameName(registerRequest.getUserName());
 
         // mapper içinde password encode ettik.
@@ -38,6 +40,16 @@ public class AuthService {
         user = userRepository.save(user);
 
         return userMapper.userToRegisterResponse(user);
+    }
+
+    public LoginResponse login(LoginRequest loginRequest){
+        User user = userRepository.findByUserNameContainingIgnoreCase(loginRequest.getUserName()).orElseThrow(()-> new BusinessException("Kullanıcı adı ve şifre hatalı"));
+        if(!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())){
+            throw new BusinessException("Wrong username or password");
+        }
+        LoginResponse res = new LoginResponse();
+        res.setToken(jwtUtil.generateToken(user.getUserName()));
+        return res;
     }
 
 

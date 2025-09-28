@@ -51,7 +51,7 @@ public class BooksController {
         return bookService.updateBookById(id, delta);
     }
     @GetMapping
-    public GetBookByIsbnTitleAuthorBookStatusResponse getBookByIsbnTitleAuthorBookStatusResponse(@RequestParam String isbn, String title, Author author, BookStatus bookStatus){
+    public GetBookByIsbnTitleAuthorBookStatusResponse getBookByIsbnTitleAuthorBookStatusResponse(@Valid @RequestParam String isbn, String title, Author author, BookStatus bookStatus){
         return bookService.getBookByIsbnTitleAuthorBookStatus(isbn, title, author, bookStatus);
     }
 }

@@ -16,7 +16,7 @@ public class BookBusinessRules {
         this.bookRepository = bookRepository;
     }
     public void bookMustNoExistWithSameId(int id){
-        Book bookWithSameId = bookRepository.findBooksById(id).orElse(null);
+        Book bookWithSameId = bookRepository.findBookById(id).orElse(null);
         if(bookWithSameId != null){
             throw new RuntimeException("Bu id'de kitap bulunmaktadır!!");
         }

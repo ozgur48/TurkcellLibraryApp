@@ -19,8 +19,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests
-                        (auth -> auth
-                                .anyRequest().permitAll()
+                        (auth ->
+                                auth
+                                        .requestMatchers("/swagger-ui/**").permitAll()
+                                        .requestMatchers("/v3/api-docs/**").permitAll()
+                                        .requestMatchers("/api/library/users/**").permitAll()
+                                        .requestMatchers(("/api/library/reservations/**")).permitAll()
+                                .anyRequest().authenticated()
                         )
                 .csrf(AbstractHttpConfigurer::disable);
 

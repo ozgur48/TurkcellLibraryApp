@@ -25,7 +25,6 @@ public class Book {
     @Column(name = "year", nullable = false)
     private Date year;
 
-
     @Column(name = "language", nullable = false)
     @NotBlank
     @Size(max = 150)
@@ -35,14 +34,6 @@ public class Book {
     @NotNull
     @Positive
     private int totalCopies;
-
-    public String getIsbn() {
-        return isbn;
-    }
-
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
-    }
 
     @Column(name = "isbn", unique = true, nullable = false)
     private String isbn;
@@ -63,7 +54,6 @@ public class Book {
     @ManyToOne
     @JoinColumn(name="publisher_id", nullable = false)
     private Publisher publisher;
-
     public Book(String title, String language, BookStatus bookStatus, int availableCopies) {
         this.title = title;
         this.language = language;
@@ -82,6 +72,13 @@ public class Book {
         this.availableCopies = availableCopies;
         this.author = author;
         this.publisher = publisher;
+    }
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 
     public Book(){}

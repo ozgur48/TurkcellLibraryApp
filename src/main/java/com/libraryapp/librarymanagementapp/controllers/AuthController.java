@@ -1,14 +1,13 @@
 package com.libraryapp.librarymanagementapp.controllers;
 
+import com.libraryapp.librarymanagementapp.dto.user.request.LoginRequest;
 import com.libraryapp.librarymanagementapp.dto.user.request.RegisterRequest;
+import com.libraryapp.librarymanagementapp.dto.user.response.LoginResponse;
 import com.libraryapp.librarymanagementapp.dto.user.response.RegisteredResponse;
 import com.libraryapp.librarymanagementapp.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @Validated
@@ -22,5 +21,9 @@ public class AuthController {
     @PostMapping("/register")
     public RegisteredResponse register(@Valid @RequestBody RegisterRequest registerRequest){
         return authService.register(registerRequest);
+    }
+    @PostMapping("/login")
+    public LoginResponse login(@Valid @RequestBody LoginRequest loginRequest){
+        return authService.login(loginRequest);
     }
 }

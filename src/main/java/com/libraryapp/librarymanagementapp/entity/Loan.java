@@ -105,7 +105,6 @@ public class Loan {
         this.id = id;
     }
 
-
     public Staff getStaff() {
         return staff;
     }

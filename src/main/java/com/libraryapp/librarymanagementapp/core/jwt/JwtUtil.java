@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import io.jsonwebtoken.Jwts;
 
 import javax.crypto.SecretKey;
+import java.sql.Time;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Objects;
@@ -18,8 +19,7 @@ public class JwtUtil {
     private String SECRET_KEY;
     public String generateToken(String userName){
 
-        var expirtionDate = new Date(System.currentTimeMillis() + 1000 * 60 * 60);
-
+        Date expirationDate = new Date(System.currentTimeMillis()* 1000L * 60 * 60);
         HashMap<String, Object> claims = new HashMap<String, Object>();
         claims.put("userName", userName);
         claims.put("admin", true);
@@ -28,9 +28,9 @@ public class JwtUtil {
                 .builder()
                 .subject(userName)
                 .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(expirationDate)
                 .claims(claims)
-                .signWith(SignatureAlgorithm.ES512, SECRET_KEY)
-                .expiration(expirtionDate)
+                .signWith(getSecretKey())
                 .compact();
         return jwt;
     }
@@ -38,17 +38,21 @@ public class JwtUtil {
        try{
            Claims claims = extractAllClaims(token);
            return claims.getExpiration().after(new Date());
-       }catch (Exception e) {
-        return false;
+       }
+       catch (Exception e){
+           return false;
        }
     }
     private Claims extractAllClaims(String token){
         SecretKey secretKey = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
         return Jwts
                 .parser()
-                .verifyWith(secretKey)
+                .decryptWith(secretKey)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
+    }
+    private SecretKey getSecretKey(){
+        return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }
 }
